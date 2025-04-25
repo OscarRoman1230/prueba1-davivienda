@@ -4,8 +4,9 @@ import {
   IsBoolean,
   IsArray,
   IsObject,
-  IsUUID,
+  IsUUID, ValidateNested,
 } from 'class-validator';
+import { Type } from 'class-transformer';
 
 export class AccountDto {
   @IsString()
@@ -83,12 +84,17 @@ export class ClientDto {
 }
 
 export class CreateRequestDto {
-  @IsObject()
+  @Type(() => ChannelDto)
+  @ValidateNested()
   channel: ChannelDto;
 
   @IsObject()
+  @ValidateNested()
+  @Type(() => ClientDto)
   client: ClientDto;
 
   @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => AccountDto)
   accounts: AccountDto[];
 }
